@@ -19,7 +19,7 @@ app.set('view engine', 'html');
 app.set('views', `${__dirname}/views`);
 
 app.get('/', (req, res, next) => {
-  res.send('hello');
+  res.render('index');
 });
 
 app.use((req, res, next) => {
