@@ -24,6 +24,7 @@
     "babel-preset-react": "^6.24.1",
     "body-parser": "^1.18.2",
     "browserify": "^14.5.0",
+    "classnames": "^2.2.5",
     "concurrently": "^3.5.1",
     "ejs": "^2.5.7",
     "express": "^4.16.2",

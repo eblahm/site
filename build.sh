@@ -8,5 +8,6 @@ rm -rf src/client/dist
 
 ./node_modules/.bin/browserify \
     -t babelify \
+    -d \
     -o src/client/dist/index.js \
     src/client/index.js

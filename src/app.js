@@ -18,7 +18,7 @@ app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
 app.set('views', `${__dirname}/views`);
 
-app.get('/', (req, res, next) => {
+app.get('*', (req, res, next) => {
   res.render('index');
 });
 
