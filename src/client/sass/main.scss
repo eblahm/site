@@ -22,8 +22,6 @@
     border: 1px solid black;
     margin: 0 .5em;
 
-    // remove
-    min-height: 100%;
     overflow-y: scroll;
   }
 
@@ -39,9 +37,6 @@
 
     transform-style: preserve-3d;
     transform-origin: 50% 50% $w;
-
-    //transform: rotateY(90deg);
-    //animation: rot 8s linear infinite;
   }
 
   .face {
@@ -58,24 +53,18 @@
   }
 
   .front {
-    //background-color: rgba(0, 0, 0, .1);
   }
 
   .right {
     transform: rotateY(-90deg);
-    background: linear-gradient(270deg, #ebebeb, white 20%);
   }
 
   .back {
-    //transform: rotateY(-180deg);
-    //background: linear-gradient(270deg, #ebebeb, white 20%);
     display: none;
   }
 
   .left {
     transform: rotateY(90deg);
-    background: linear-gradient(270deg, #ebebeb, white 20%);
-    opacity: 0;
   }
 
 
