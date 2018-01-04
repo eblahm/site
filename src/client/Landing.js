@@ -7,7 +7,7 @@ class Landing extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cubeIndex: 0,
+      cubeIndex: 4000,
       cubeWidth: 500,
       spinning: false,
     };
@@ -20,11 +20,10 @@ class Landing extends React.Component {
       this.setState({ spinning: true });
     }, 5000);
 
-    document.addEventListener('mousemove', () => {
+    document.addEventListener('mousemove', event => {
       if (this.state.spinning) {
-        console.log(this.state.cubeIndex);
         this.setState({
-          cubeIndex: this.state.cubeIndex + .01
+          cubeIndex: this.state.cubeIndex + (event.movementX * -.005)
         });
       }
     }, false);
@@ -35,6 +34,9 @@ class Landing extends React.Component {
       }, false);
 
       el.addEventListener('mouseup', () => {
+        if ((this.state.cubeIndex % 1)) {
+          this.setState({ cubeIndex: Math.round(this.state.cubeIndex) });
+        }
         this.setState({ spinning: false });
       }, false);
     });
@@ -55,10 +57,8 @@ class Landing extends React.Component {
       rotation = 0;
     } else if (relativePosition <= 1) {
       rotation = relativePosition * -90;
-    } else if (relativePosition <= 2) {
-      rotation = -180;
     } else if (relativePosition <= 3) {
-      rotation = relativePosition * 30;
+      rotation = -180;
     } else if (relativePosition <= 4) {
       rotation = (4 - relativePosition) * 90
     }
