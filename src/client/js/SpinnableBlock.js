@@ -4,12 +4,10 @@ const _ = require('lodash');
 const cx = require('classnames');
 
 const defaultProps = {
-  mouseSpeedFactor: -1.5,
+  mouseSpeedFactor: 1.5,
 };
 
-const BACKSIDE = -180;
-const RIGHTSIDE = -90;
-const LEFTSIDE = 90;
+const BACKSIDE = 180;
 const FRONT = 0;
 
 class SpinnableBlock extends React.Component {
@@ -25,7 +23,8 @@ class SpinnableBlock extends React.Component {
 
   handleMouseMove(event) {
     if (this.state.spinning) {
-      const nextCubeIndex = this.state.cubeIndex + ((event.movementX / this.state.cubeWidth) * this.props.mouseSpeedFactor);
+      const mouseMoveDistance = ((event.movementX / this.state.cubeWidth) * this.props.mouseSpeedFactor);
+      const nextCubeIndex = this.state.cubeIndex - mouseMoveDistance;
       this.setState({
         cubeIndex: nextCubeIndex
       });
@@ -36,8 +35,12 @@ class SpinnableBlock extends React.Component {
     if (this.state.spinning) {
       this.setState({ spinning: false });
     }
+
+    // snap back to closest integer
     if ((this.state.cubeIndex % 1)) {
-      this.setState({ cubeIndex: Math.round(this.state.cubeIndex) });
+      this.setState({
+        cubeIndex: Math.round(this.state.cubeIndex)
+      });
     }
   }
 
@@ -61,20 +64,28 @@ class SpinnableBlock extends React.Component {
     const facesLength = this.faces.length;
     const cubePosition = this.state.cubeIndex * -1;
     const offsetPosition = (initialPosition + modulo2(cubePosition, facesLength)) % facesLength;
+    const secondToLastPosition = (facesLength - 1);
+
+    console.log(initialPosition, 'offsetPosition', offsetPosition);
 
     if (offsetPosition === 0) {
+      // no rotation, eg, front position
       return FRONT;
     }
 
-    if (offsetPosition === 1) {
-      return RIGHTSIDE;
+    if (offsetPosition > 0 && offsetPosition <= 1) {
+      return offsetPosition * -90;
     }
 
-    if (offsetPosition === (facesLength - 1)) {
-      return LEFTSIDE;
+    if (offsetPosition === secondToLastPosition) {
+      return 90
     }
 
-    return BACKSIDE
+    if (offsetPosition > secondToLastPosition) {
+      return (1 - (offsetPosition % 1)) * 90;
+    }
+
+    return BACKSIDE;
   }
 
   cubeFace(initialPosition, content) {
@@ -86,16 +97,17 @@ class SpinnableBlock extends React.Component {
       border: '1px solid black'
     };
 
-    let rotation = this.getCubeFacePosition(initialPosition);
+    const rotation = this.getCubeFacePosition(initialPosition);
+    console.log(initialPosition, 'rotation', rotation);
     if (rotation === BACKSIDE) {
       style.display = 'none';
     }
 
     style.transform = `rotateY(${rotation}deg)`;
-    style.transition = 'all .5s ease-in';
 
-    // if (!spinning) {
-    // }
+    if (!spinning) {
+      style.transition = 'all .5s ease-in';
+    }
 
     return <div
       className={cx("face", { spinning })}

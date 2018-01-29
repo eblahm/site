@@ -14,8 +14,6 @@ class Landing extends React.Component {
             <div>Second</div>
             <div>Third</div>
             <div>Fourth</div>
-            <div>Fifth</div>
-            <div>Sixth</div>
           </SpinnableBlock>
         </section>
         <section className="content">
