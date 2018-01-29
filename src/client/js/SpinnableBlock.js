@@ -7,12 +7,17 @@ const defaultProps = {
   mouseSpeedFactor: -1.5,
 };
 
+const BACKSIDE = -180;
+const RIGHTSIDE = -90;
+const LEFTSIDE = 90;
+const FRONT = 0;
+
 class SpinnableBlock extends React.Component {
   constructor(props) {
     super(props);
     this.faces = [];
     this.state = {
-      cubeIndex: 4000,
+      cubeIndex: 0,
       cubeWidth: 500,
       spinning: false,
     };
@@ -52,34 +57,45 @@ class SpinnableBlock extends React.Component {
     });
   }
 
+  getCubeFacePosition(initialPosition) {
+    const facesLength = this.faces.length;
+    const cubePosition = this.state.cubeIndex * -1;
+    const offsetPosition = (initialPosition + modulo2(cubePosition, facesLength)) % facesLength;
+
+    if (offsetPosition === 0) {
+      return FRONT;
+    }
+
+    if (offsetPosition === 1) {
+      return RIGHTSIDE;
+    }
+
+    if (offsetPosition === (facesLength - 1)) {
+      return LEFTSIDE;
+    }
+
+    return BACKSIDE
+  }
+
   cubeFace(initialPosition, content) {
-    const {cubeIndex, spinning} = this.state;
 
-    let relativePosition = (Math.abs(initialPosition - 4 - cubeIndex)) % 4;
-    relativePosition = relativePosition && (4 - relativePosition);
+    const {cubeIndex, spinning, cubeWidth} = this.state;
+    const cubeRadius = Math.ceil(cubeWidth / 2);
+    const style = {
+      transformOrigin: `50% 50% ${cubeRadius}px`,
+      border: '1px solid black'
+    };
 
-    let rotation;
-    const style = {};
-
-    if (relativePosition === 0) {
-      rotation = 0;
-    } else if (relativePosition <= 1) {
-      rotation = relativePosition * -90;
-      style.border = '1px solid black';
-    } else if (relativePosition < 3) {
-      rotation = -180;
+    let rotation = this.getCubeFacePosition(initialPosition);
+    if (rotation === BACKSIDE) {
       style.display = 'none';
-    } else if (relativePosition <= 4) {
-      rotation = (4 - relativePosition) * 90;
-      style.border = '1px solid black';
     }
 
-    style.transformOrigin = `50% 50% ${Math.ceil(this.state.cubeWidth / 2)}px`;
     style.transform = `rotateY(${rotation}deg)`;
+    style.transition = 'all .5s ease-in';
 
-    if (!spinning) {
-      style.transition = 'all .5s ease-in';
-    }
+    // if (!spinning) {
+    // }
 
     return <div
       className={cx("face", { spinning })}
@@ -91,6 +107,11 @@ class SpinnableBlock extends React.Component {
         onClick={() => this.setState({ cubeIndex: cubeIndex + 1 })}
       >
         next
+      </button>
+      <button
+        onClick={() => this.setState({ cubeIndex: cubeIndex - 1 })}
+      >
+        prev
       </button>
       {content}
     </div>
@@ -112,5 +133,13 @@ class SpinnableBlock extends React.Component {
 }
 
 SpinnableBlock.defaultProps = defaultProps;
+
+
+const modulo2 = (a, b) => {
+  if (a < 0) {
+    return (b - Math.abs(a % b)) % b;
+  }
+  return a % b;
+};
 
 module.exports = SpinnableBlock;

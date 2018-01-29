@@ -10,8 +10,12 @@ class Landing extends React.Component {
       <div className="app-container">
         <section className="sidebar">
           <SpinnableBlock>
-            <div>Hello</div>
-            <div>Goodbye</div>
+            <div>First</div>
+            <div>Second</div>
+            <div>Third</div>
+            <div>Fourth</div>
+            <div>Fifth</div>
+            <div>Sixth</div>
           </SpinnableBlock>
         </section>
         <section className="content">
